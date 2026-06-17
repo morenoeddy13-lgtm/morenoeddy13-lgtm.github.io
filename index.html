@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heladería Artesanal - Sistema de Ventas Premium</title>
+    <link rel="icon" href="Icono.ico" >
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        body { font-family: 'Poppins', sans-serif; }
+        /* Ocultar barra de scroll estética en el carrusel */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-stone-100 text-stone-800 min-h-screen flex flex-col">
+
+    <nav class="bg-amber-50 border-b border-stone-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-2">
+                    <span class="text-2xl">🍦</span>
+                    <span class="text-xl font-bold text-amber-800 tracking-wide">Raíces Dulces</span>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#catalogo-seccion" class="text-stone-600 hover:text-amber-700 px-3 py-2 text-sm font-medium">Catálogo</a>
+                    <a href="#admin-panel" class="bg-amber-700 text-white hover:bg-amber-800 px-3 py-2 rounded-md text-sm font-medium transition shadow-sm">Panel Control</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+        
+        <div class="bg-gradient-to-r from-amber-700 to-amber-900 rounded-2xl p-8 text-white shadow-md text-center md:text-left md:flex md:items-center md:justify-between">
+            <div class="space-y-2">
+                <h1 class="text-3xl md:text-4xl font-bold">Punto de Venta e Inventario v2.8</h1>
+                <p class="text-amber-100 font-light">Módulo de pagos dinámicos por tarjeta (Crédito/Débito) con auditoría y envío por WhatsApp.</p>
+            </div>
+            <div class="mt-4 md:mt-0 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg text-sm">
+                <span class="block text-xs uppercase tracking-wider text-amber-200 text-center">Terminal Virtual</span>
+                <span class="font-semibold text-green-400 flex items-center justify-center gap-1">● Pasarela Bancaria Activa</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8" id="catalogo-seccion">
+            
+            <div class="lg:col-span-2 space-y-6">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-stone-700 flex items-center gap-2">
+                        <span>✨</span> Sabores de Temporada
+                    </h2>
+                    <div class="flex space-x-2">
+                        <button onclick="moverCarrusel(-1)" class="bg-white border border-stone-300 text-stone-700 hover:bg-stone-50 p-2.5 rounded-full shadow-xs transition cursor-pointer font-bold">
+                            &larr;
+                        </button>
+                        <button onclick="moverCarrusel(1)" class="bg-white border border-stone-300 text-stone-700 hover:bg-stone-50 p-2.5 rounded-full shadow-xs transition cursor-pointer font-bold">
+                            &rarr;
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    <div id="carrusel-productos" class="flex gap-6 overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth pb-4">
+                        </div>
+                </div>
+                <p class="text-xs text-stone-400 italic text-center md:text-left">← Desliza horizontalmente o usa las flechas para explorar los productos →</p>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-stone-200 space-y-4">
+                    <h2 class="text-xl font-bold text-stone-700 flex items-center gap-2 border-b pb-3">
+                        <span>🛒</span> Detalle de la Orden
+                    </h2>
+                    
+                    <div id="items-carrito" class="space-y-3 max-h-48 overflow-y-auto pr-1">
+                        <p class="text-stone-400 text-sm text-center py-4">El carrito está vacío.</p>
+                    </div>
+
+                    <div class="border-t pt-3 space-y-1.5">
+                        <div class="flex justify-between text-base font-bold text-stone-800">
+                            <span>Total de la Orden:</span>
+                            <span id="total-carrito">$0.00</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-2 space-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-stone-500 uppercase mb-1">Nombre del Cliente</label>
+                            <input type="text" id="nombre-cliente" placeholder="Ej. María López" class="w-full px-3 py-2 border rounded-lg text-sm bg-stone-50 focus:outline-amber-600">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs font-semibold text-stone-500 uppercase mb-1 flex items-center gap-1">
+                                📞 Teléfono WhatsApp Destino
+                            </label>
+                            <input type="tel" id="telefono-whatsapp" placeholder="Ej: 5215512345678" class="w-full px-3 py-2 border border-emerald-300 rounded-lg text-sm bg-emerald-50/30 focus:outline-emerald-600 font-medium">
+                            <span class="text-[10px] text-stone-400 block mt-1">Incluye código de país (ej: 521 México) sin espacios ni símbolos (+).</span>
+                        </div>
+                    </div>
+
+                    <div class="border-t pt-4 space-y-3">
+                        <label class="block text-xs font-semibold text-stone-500 uppercase tracking-wider">Forma de Pago</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button id="btn-pago-efectivo" onclick="seleccionarMetodoPago('efectivo')" class="border-2 border-amber-600 bg-amber-50 text-amber-900 rounded-xl py-2.5 text-sm font-medium flex flex-col items-center justify-center gap-1 transition cursor-pointer">
+                                <span class="text-lg">💵</span> Efectivo
+                            </button>
+                            <button id="btn-pago-tarjeta" onclick="seleccionarMetodoPago('tarjeta')" class="border border-stone-200 hover:border-stone-300 text-stone-600 rounded-xl py-2.5 text-sm font-medium flex flex-col items-center justify-center gap-1 transition cursor-pointer">
+                                <span class="text-lg">💳</span> Tarjeta Bancaria
+                            </button>
+                        </div>
+
+                        <div id="pantalla-pago" class="bg-stone-50 border border-stone-200 rounded-xl p-3 text-sm">
+                            
+                            <div id="pago-efectivo-view" class="space-y-2">
+                                <div class="flex justify-between items-center">
+                                    <label class="text-xs text-stone-600 font-medium">¿Con cuánto efectivo paga?</label>
+                                    <input type="number" id="efectivo-recibido" oninput="calcularCambio()" placeholder="$0.00" class="w-24 px-2 py-1 border rounded text-right bg-white focus:outline-amber-600 text-sm font-semibold">
+                                </div>
+                                <div class="flex justify-between items-center pt-1 border-t border-dashed border-stone-200 text-xs">
+                                    <span class="text-stone-500">Cambio a entregar:</span>
+                                    <span id="efectivo-cambio" class="font-bold text-emerald-700 text-sm">$0.00</span>
+                                </div>
+                            </div>
+
+                            <div id="pago-tarjeta-view" class="hidden space-y-3">
+                                <div>
+                                    <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-wide mb-1.5">Clasificación de Tarjeta</label>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <button type="button" id="btn-tarjeta-credito" onclick="seleccionarTipoTarjeta('credito')" class="border-2 border-amber-600 bg-amber-50 text-amber-900 rounded-lg py-1 text-xs font-semibold text-center transition cursor-pointer">
+                                            Crédito
+                                        </button>
+                                        <button type="button" id="btn-tarjeta-debito" onclick="seleccionarTipoTarjeta('debito')" class="border border-stone-200 text-stone-600 rounded-lg py-1 text-xs font-semibold text-center transition cursor-pointer">
+                                            Débito
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2 pt-1 border-t border-stone-200/60">
+                                    <div>
+                                        <input type="text" id="tarjeta-titular" placeholder="Nombre del Propietario" class="w-full px-2.5 py-1.5 border rounded-lg text-xs bg-white focus:outline-amber-600 font-medium">
+                                    </div>
+                                    <div>
+                                        <input type="text" id="tarjeta-numero" placeholder="Número de Tarjeta (16 dígitos)" maxlength="16" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="w-full px-2.5 py-1.5 border rounded-lg text-xs bg-white focus:outline-amber-600 font-mono tracking-wider">
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <input type="text" id="tarjeta-vencimiento" placeholder="MM/AA" maxlength="5" class="w-full px-2.5 py-1.5 border rounded-lg text-xs bg-white text-center focus:outline-amber-600 font-medium">
+                                        <input type="password" id="tarjeta-cvv" placeholder="CVV / CVC" maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="w-full px-2.5 py-1.5 border rounded-lg text-xs bg-white text-center focus:outline-amber-600 font-mono tracking-widest">
+                                    </div>
+                                    <div>
+                                        <input type="email" id="tarjeta-correo" placeholder="Correo Electrónico (Verificación)" class="w-full px-2.5 py-1.5 border rounded-lg text-xs bg-white focus:outline-amber-600">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="procesarVenta()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 px-4 rounded-xl transition flex items-center justify-center gap-2 shadow-sm cursor-pointer mt-2">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.4.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.713-1.457L0 24zm6.59-4.846c1.66.986 3.296 1.489 4.974 1.49 5.482 0 9.94-4.448 9.943-9.925.002-2.654-1.02-5.148-2.877-7.008C16.828 1.85 14.345 1.83 11.691 1.83c-5.485 0-9.942 4.449-9.944 9.928-.001 1.745.469 3.447 1.36 4.954l-1.011 3.693 3.795-.995zM16.974 13.91c-.267-.134-1.579-.78-1.821-.866-.243-.087-.419-.131-.596.134-.176.265-.682.866-.837 1.039-.154.173-.309.194-.576.061-.267-.134-1.127-.416-2.147-1.326-.793-.707-1.329-1.582-1.485-1.848-.156-.266-.016-.41.117-.542.121-.119.267-.312.4-.468.133-.156.177-.266.267-.443.09-.178.045-.333-.022-.467-.067-.133-.596-1.437-.816-1.966-.214-.518-.45-.447-.621-.456-.16-.008-.344-.01-.528-.01-.184 0-.485.069-.739.346-.253.277-.967.945-.967 2.304 0 1.359.988 2.669 1.126 2.855.139.186 1.944 2.969 4.71 4.16.657.283 1.171.453 1.571.58.66.21 1.261.18 1.736.109.53-.08 1.579-.645 1.8-.1.236 1.236.42.223.593.033.174-.19.266-.443.134-.576-.133-.134-.78-.866-1.047-1.002z"/></svg>
+                        Completar Venta y Abrir WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <hr class="border-stone-200">
+
+        <div id="admin-panel" class="bg-white rounded-2xl p-6 shadow-sm border border-stone-200 space-y-6">
+            <div class="border-b pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-stone-700 flex items-center gap-2">
+                        <span>📊</span> Gestión de Logística e Ingresos
+                    </h2>
+                    <p class="text-sm text-stone-500">Ajuste técnico de inventarios físicos y métodos de pago liquidados.</p>
+                </div>
+                <div class="flex gap-4 bg-stone-50 p-2 rounded-xl border w-full sm:w-auto justify-around">
+                    <div class="text-center px-4">
+                        <span class="block text-xs uppercase text-stone-400">Ventas Cifradas</span>
+                        <span id="ventas-historicas-contador" class="text-xl font-bold text-amber-800">0</span>
+                    </div>
+                    <div class="text-center px-4 border-l">
+                        <span class="block text-xs uppercase text-stone-400">Caja Total</span>
+                        <span id="ingresos-totales" class="text-xl font-bold text-emerald-700">$0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="space-y-3">
+                    <h3 class="text-md font-bold uppercase tracking-wider text-stone-500">Modelo de Almacén (Existencias)</h3>
+                    <div class="overflow-x-auto rounded-xl border border-stone-200">
+                        <table class="min-w-full divide-y divide-stone-200 text-sm">
+                            <thead class="bg-stone-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-left font-semibold text-stone-600">Especialidad Natural</th>
+                                    <th class="px-4 py-3 text-center font-semibold text-stone-600">Disponibilidad</th>
+                                    <th class="px-4 py-3 text-right font-semibold text-stone-600">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-inventario" class="divide-y divide-stone-200 bg-white">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <h3 class="text-md font-bold uppercase tracking-wider text-stone-500">Auditoría Reciente de Caja</h3>
+                    <div class="border border-stone-200 rounded-xl overflow-hidden text-sm bg-stone-50 max-h-[260px] overflow-y-auto">
+                        <table class="min-w-full divide-y divide-stone-200">
+                            <thead class="bg-stone-100">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-stone-600">Cliente / ID</th>
+                                    <th class="px-4 py-2 text-center text-stone-600">Método</th>
+                                    <th class="px-4 py-2 text-right text-stone-600">Monto Neto</th>
+                                </tr>
+                            </thead>
+                            <tbody id="log-ventas" class="divide-y divide-stone-200 bg-white">
+                                <tr>
+                                    <td colspan="3" class="text-center py-8 text-stone-400 italic">No se han registrado transacciones en este turno.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-stone-800 text-stone-400 py-6 border-t border-stone-900 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs space-y-2">
+            <p class="font-medium text-stone-300">&copy; 2026 Heladería Raíces Dulces. Sistema de Control Interno Protegido.</p>
+        </div>
+    </footer>
+
+    <script>
+        // BASE DE DATOS LOCAL
+        let productos = [
+            { id: 1, nombre: "Helado de Elote", variante: "En hoja de maíz natural", precio: 45.00, stock: 25, imagen: "elote.jpeg", color: "bg-amber-100" },
+            { id: 2, nombre: "Sorbete de Mango", variante: "En su propia cáscara", precio: 50.00, stock: 15, imagen: "mango.jpeg", color: "bg-orange-100" },
+            { id: 3, nombre: "Helado de Piña", variante: "En piña natural ahuecada", precio: 65.00, stock: 10, imagen: "piña.jpeg", color: "bg-yellow-100" },
+            { id: 4, nombre: "Helado de Coco", variante: "En su corteza rígida", precio: 55.00, stock: 18, imagen: "coco.jpeg", color: "bg-stone-200" }
+        ];
+
+        let carrito = [];
+        let historialVentas = [];
+        let contadorVentaId = 4001;
+        let metodoPagoSeleccionado = 'efectivo';
+        let tipoTarjetaSeleccionado = 'credito'; // Control secundario de tarjeta
+        let totalActualCarrito = 0;
+
+        // INICIALIZACIÓN
+        document.addEventListener("DOMContentLoaded", () => {
+            renderizarCatalogoCarrusel();
+            renderizarInventario();
+            seleccionarMetodoPago('efectivo');
+        });
+
+        // DESARROLLO DEL COMPONENTE CARRUSEL
+        function renderizarCatalogoCarrusel() {
+            const carrusel = document.getElementById("carrusel-productos");
+            carrusel.innerHTML = "";
+
+            productos.forEach(prod => {
+                const sinStock = prod.stock === 0;
+                carrusel.innerHTML += `
+                    <div class="w-[280px] sm:w-[320px] flex-shrink-0 snap-start bg-white rounded-2xl overflow-hidden shadow-sm border border-stone-200 flex flex-col justify-between transition hover:shadow-md">
+                        <div class="relative h-56 w-full ${prod.color} flex items-center justify-center overflow-hidden">
+                            <img src="${prod.imagen}" alt="${prod.nombre}" class="object-cover w-full h-full object-center" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1560008511-11c63416e52d?auto=format&fit=crop&w=500&q=80';">
+                            ${sinStock ? `<div class="absolute inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center"><span class="bg-red-600 text-white text-xs uppercase font-bold px-3 py-1 rounded-full tracking-wider">Agotado</span></div>` : ''}
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col justify-between space-y-4">
+                            <div>
+                                <div class="flex justify-between items-start">
+                                    <h3 class="text-base font-bold text-stone-800">${prod.nombre}</h3>
+                                    <span class="text-amber-800 font-bold text-base">$${prod.precio.toFixed(2)}</span>
+                                </div>
+                                <p class="text-xs text-stone-400 mt-0.5">${prod.variante}</p>
+                            </div>
+                            <div class="flex justify-between items-center pt-1">
+                                <span class="text-xs font-medium ${prod.stock <= 5 ? 'text-red-500 font-semibold' : 'text-stone-500'}">Existencia: ${prod.stock} pzas</span>
+                                <button onclick="agregarAlCarrito(${prod.id})" ${sinStock ? 'disabled class="bg-stone-200 text-stone-400 text-xs px-3 py-1.5 rounded-lg cursor-not-allowed"' : 'class="bg-amber-700 hover:bg-amber-800 text-white text-xs font-semibold px-4 py-1.5 rounded-lg transition shadow-sm cursor-pointer"'}>
+                                    Agregar +
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function moverCarrusel(direccion) {
+            const carrusel = document.getElementById("carrusel-productos");
+            carrusel.scrollLeft += (direccion * 300);
+        }
+
+        // INTERFAZ GENERAL DE MÉTODOS DE PAGO
+        function seleccionarMetodoPago(metodo) {
+            metodoPagoSeleccionado = metodo;
+            const btnEfectivo = document.getElementById("btn-pago-efectivo");
+            const btnTarjeta = document.getElementById("btn-pago-tarjeta");
+            const viewEfectivo = document.getElementById("pago-efectivo-view");
+            const viewTarjeta = document.getElementById("pago-tarjeta-view");
+
+            if (metodo === 'efectivo') {
+                btnEfectivo.className = "border-2 border-amber-600 bg-amber-50 text-amber-900 rounded-xl py-2.5 text-sm font-medium flex flex-col items-center justify-center gap-1 transition cursor-pointer";
+                btnTarjeta.className = "border border-stone-200 hover:border-stone-300 text-stone-600 rounded-xl py-2.5 text-sm font-medium flex flex-col items-center justify-center gap-1 transition cursor-pointer";
+                viewEfectivo.classList.remove("hidden");
+                viewTarjeta.classList.add("hidden");
+            } else {
+                btnEfectivo.className = "border border-stone-200 hover:border-stone-300 text-stone-600 rounded-xl py-2.5 text-sm font-medium flex flex-col items-center justify-center gap-1 transition cursor-pointer";
+                btnTarjeta.className = "border-2 border-amber-600 bg-amber-50 text-amber-900 rounded-xl py-2.5 text-sm font-medium flex flex-col items-center justify-center gap-1 transition cursor-pointer";
+                viewEfectivo.classList.add("hidden");
+                viewTarjeta.classList.remove("hidden");
+            }
+            calcularCambio();
+        }
+
+        // SUB-INTERFAZ: SELECCIÓN CRÉDITO O DÉBITO
+        function seleccionarTipoTarjeta(tipo) {
+            tipoTarjetaSeleccionado = tipo;
+            const btnCredito = document.getElementById("btn-tarjeta-credito");
+            const btnDebito = document.getElementById("btn-tarjeta-debito");
+
+            if (tipo === 'credito') {
+                btnCredito.className = "border-2 border-amber-600 bg-amber-50 text-amber-900 rounded-lg py-1 text-xs font-semibold text-center transition cursor-pointer";
+                btnDebito.className = "border border-stone-200 text-stone-600 rounded-lg py-1 text-xs font-semibold text-center transition cursor-pointer";
+            } else {
+                btnCredito.className = "border border-stone-200 text-stone-600 rounded-lg py-1 text-xs font-semibold text-center transition cursor-pointer";
+                btnDebito.className = "border-2 border-amber-600 bg-amber-50 text-amber-900 rounded-lg py-1 text-xs font-semibold text-center transition cursor-pointer";
+            }
+        }
+
+        function calcularCambio() {
+            const inputRecibido = document.getElementById("efectivo-recibido");
+            const txtCambio = document.getElementById("efectivo-cambio");
+            
+            if (metodoPagoSeleccionado !== 'efectivo') {
+                txtCambio.innerText = "$0.00";
+                return;
+            }
+
+            const recibido = parseFloat(inputRecibido.value) || 0;
+            if (recibido >= totalActualCarrito && totalActualCarrito > 0) {
+                const cambio = recibido - totalActualCarrito;
+                txtCambio.innerText = `$${cambio.toFixed(2)}`;
+                txtCambio.className = "font-bold text-emerald-700 text-sm";
+            } else if (recibido < totalActualCarrito && recibido > 0) {
+                txtCambio.innerText = "Monto insuficiente";
+                txtCambio.className = "font-semibold text-red-500 text-xs";
+            } else {
+                txtCambio.innerText = "$0.00";
+                txtCambio.className = "font-bold text-stone-600 text-sm";
+            }
+        }
+
+        // COMPONENTES LÓGICOS DEL CARRITO DE COMPRAS
+        function agregarAlCarrito(id) {
+            const prod = productos.find(p => p.id === id);
+            if (prod && prod.stock > 0) {
+                const itemCarro = carrito.find(item => item.id === id);
+                if (itemCarro) {
+                    if (itemCarro.cantidad < prod.stock) {
+                        itemCarro.cantidad++;
+                    } else {
+                        alert("Almacén al límite para este sabor.");
+                        return;
+                    }
+                } else {
+                    carrito.push({ id: prod.id, nombre: prod.nombre, precio: prod.precio, cantidad: 1 });
+                }
+                actualizarCarrito();
+            }
+        }
+
+        function cambiarCantidadCarrito(id, cambio) {
+            const item = carrito.find(i => i.id === id);
+            const prod = productos.find(p => p.id === id);
+            if (item) {
+                item.cantidad += cambio;
+                if (item.cantidad > prod.stock) {
+                    alert("Excede existencias.");
+                    item.cantidad = prod.stock;
+                }
+                if (item.cantidad <= 0) {
+                    carrito = carrito.filter(i => i.id !== id);
+                }
+                actualizarCarrito();
+            }
+        }
+
+        function actualizarCarrito() {
+            const contenedor = document.getElementById("items-carrito");
+            const totalTxt = document.getElementById("total-carrito");
+
+            if (carrito.length === 0) {
+                contenedor.innerHTML = `<p class="text-stone-400 text-sm text-center py-4">El carrito está vacío.</p>`;
+                totalActualCarrito = 0;
+                totalTxt.innerText = "$0.00";
+                calcularCambio();
+                return;
+            }
+
+            contenedor.innerHTML = "";
+            totalActualCarrito = 0;
+
+            carrito.forEach(item => {
+                const subtotalItem = item.precio * item.cantidad;
+                totalActualCarrito += subtotalItem;
+
+                contenedor.innerHTML += `
+                    <div class="flex justify-between items-center bg-stone-50 p-2 rounded-lg border border-stone-200 text-xs">
+                        <div class="flex-grow pr-2">
+                            <span class="font-bold text-stone-800">${item.nombre}</span>
+                            <span class="block text-stone-400">$${item.precio.toFixed(2)} c/u</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="cambiarCantidadCarrito(${item.id}, -1)" class="w-5 h-5 bg-stone-200 rounded flex items-center justify-center hover:bg-stone-300 font-bold cursor-pointer">-</button>
+                            <span class="font-semibold text-stone-700 w-4 text-center">${item.cantidad}</span>
+                            <button onclick="cambiarCantidadCarrito(${item.id}, 1)" class="w-5 h-5 bg-stone-200 rounded flex items-center justify-center hover:bg-stone-300 font-bold cursor-pointer">+</button>
+                        </div>
+                        <span class="font-semibold text-stone-800 w-16 text-right">$${subtotalItem.toFixed(2)}</span>
+                    </div>
+                `;
+            });
+
+            totalTxt.innerText = `$${totalActualCarrito.toFixed(2)}`;
+            calcularCambio();
+        }
+
+        // CONTROL DE INVENTARIO
+        function renderizarInventario() {
+            const tabla = document.getElementById("tabla-inventario");
+            tabla.innerHTML = "";
+
+            productos.forEach(prod => {
+                tabla.innerHTML += `
+                    <tr>
+                        <td class="px-4 py-3 font-medium text-stone-800">
+                            <div>${prod.nombre}</div>
+                            <div class="text-xs text-stone-400 font-normal">${prod.variante}</div>
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                            <span class="px-2.5 py-1 rounded-full text-xs font-bold ${prod.stock <= 5 ? 'bg-red-100 text-red-700' : 'bg-stone-100 text-stone-700'}">
+                                ${prod.stock} uds
+                            </span>
+                        </td>
+                        <td class="px-4 py-3 text-right">
+                            <button onclick="reabastecer(${prod.id})" class="text-xs bg-stone-100 hover:bg-stone-200 text-stone-700 border border-stone-300 font-medium py-1 px-2.5 rounded-md transition cursor-pointer">
+                                + Restock (10)
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function reabastecer(id) {
+            const prod = productos.find(p => p.id === id);
+            if (prod) {
+                prod.stock += 10;
+                actualizarVistasTodo();
+            }
+        }
+
+        function actualizarVistasTodo() {
+            renderizarCatalogoCarrusel();
+            renderizarInventario();
+            actualizarCarrito();
+        }
+
+        // PROCESAMIENTO FINAL CON INPUT BANCARIO DINÁMICO
+        function procesarVenta() {
+            if (carrito.length === 0) {
+                alert("Por favor, agregue helados a la orden antes de cobrar.");
+                return;
+            }
+
+            const cliente = document.getElementById("nombre-cliente").value.trim() || "Consumidor Final";
+            
+            // Captura y sanitización del teléfono de WhatsApp
+            const inputTelefono = document.getElementById("telefono-whatsapp").value.trim();
+            if (!inputTelefono) {
+                alert("Por favor, ingresa el número de teléfono de WhatsApp para enviar el ticket.");
+                return;
+            }
+            const telefonoLimpio = inputTelefono.replace(/[^0-9]/g, '');
+            if (telefonoLimpio.length < 10) {
+                alert("El número de teléfono debe incluir código de país y tener al menos 10 dígitos.");
+                return;
+            }
+
+            // Variables para almacenar datos capturados si es tarjeta
+            let tarjetaTitular = "";
+            let tarjetaNumero = "";
+            let tarjetaCorreo = "";
+            let tarjetaOculta = "";
+
+            // VALIDACIONES DE ACUERDO AL MÉTODO DE PAGO
+            if (metodoPagoSeleccionado === 'efectivo') {
+                const inputRecibido = document.getElementById("efectivo-recibido");
+                const recibidoVal = parseFloat(inputRecibido.value) || 0;
+
+                if (recibidoVal < totalActualCarrito) {
+                    alert("El dinero en efectivo recibido es insuficiente.");
+                    return;
+                }
+            } else {
+                // Validación estricta del Formulario de Tarjeta Bancaria
+                tarjetaTitular = document.getElementById("tarjeta-titular").value.trim();
+                tarjetaNumero = document.getElementById("tarjeta-numero").value.trim();
+                const tarjetaVence = document.getElementById("tarjeta-vencimiento").value.trim();
+                const tarjetaCvv = document.getElementById("tarjeta-cvv").value.trim();
+                tarjetaCorreo = document.getElementById("tarjeta-correo").value.trim();
+
+                if (!tarjetaTitular || !tarjetaNumero || !tarjetaVence || !tarjetaCvv || !tarjetaCorreo) {
+                    alert("Atención: Todos los campos de la tarjeta bancaria y el correo de verificación son obligatorios.");
+                    return;
+                }
+
+                if (tarjetaNumero.length < 15) {
+                    alert("El número de tarjeta ingresado no es válido (Debe tener entre 15 y 16 dígitos).");
+                    return;
+                }
+
+                // Generar máscara segura (ejemplo: •••• 5421)
+                tarjetaOculta = `•••• ${tarjetaNumero.slice(-4)}`;
+            }
+
+            // Descontar existencias físicas reales
+            carrito.forEach(item => {
+                const prod = productos.find(p => p.id === item.id);
+                if (prod) prod.stock -= item.cantidad;
+            });
+
+            const idVenta = contadorVentaId++;
+            
+            // Definir etiqueta descriptiva del método para el panel administrador
+            let metodoAuditoria = "";
+            if (metodoPagoSeleccionado === 'efectivo') {
+                metodoAuditoria = "💵 Efectivo";
+            } else {
+                metodoAuditoria = `💳 Tarjeta (${tipoTarjetaSeleccionado === 'credito' ? 'Crédito' : 'Débito'})`;
+            }
+
+            // Registrar en historial visual del administrador
+            const detalleCorta = carrito.map(i => `${i.cantidad}x ${i.nombre.replace('Helado de ', '')}`).join(', ');
+            historialVentas.unshift({
+                id: idVenta,
+                cliente: cliente,
+                metodo: metodoAuditoria,
+                detalle: detalleCorta,
+                monto: totalActualCarrito
+            });
+
+            // COMPOSICIÓN DEL TICKET DIGITAL CON DATOS DINÁMICOS
+            let textoMensaje = `🍦 *TICKET DE VENTA - RAÍCES DULCES* 🍦\n`;
+            textoMensaje += `====================================\n`;
+            textoMensaje += `🆔 *Nota ID:* #${idVenta}\n`;
+            textoMensaje += `👤 *Cliente:* ${cliente}\n`;
+            textoMensaje += `====================================\n`;
+            
+            carrito.forEach(item => {
+                textoMensaje += `▪️ ${item.cantidad} x ${item.nombre} -> $${(item.precio * item.cantidad).toFixed(2)}\n`;
+            });
+            
+            textoMensaje += `====================================\n`;
+            textoMensaje += `💰 *TOTAL LIQUIDADO:* $${totalActualCarrito.toFixed(2)}\n`;
+            
+            if (metodoPagoSeleccionado === 'efectivo') {
+                const recibidoVal = parseFloat(document.getElementById("efectivo-recibido").value) || 0;
+                textoMensaje += `💵 *Forma de Pago:* EFECTIVO\n`;
+                textoMensaje += `📥 *Efectivo Recibido:* $${recibidoVal.toFixed(2)}\n`;
+                textoMensaje += `🫴 *Cambio Entregado:* $${(recibidoVal - totalActualCarrito).toFixed(2)}\n`;
+            } else {
+                textoMensaje += `💳 *Forma de Pago:* TARJETA (${tipoTarjetaSeleccionado.toUpperCase()})\n`;
+                textoMensaje += `👤 *Propietario:* ${tarjetaTitular}\n`;
+                textoMensaje += `🔢 *No. Tarjeta:* ${tarjetaOculta}\n`;
+                textoMensaje += `📧 *Correo Enviado:* ${tarjetaCorreo}\n`;
+                textoMensaje += `🛡️ *Estado TPV:* Operación Aprobada\n`;
+            }
+            textoMensaje += `====================================\n\n`;
+            textoMensaje += `_Comprobante verificado. Se ha enviado un duplicado al correo proporcionado._`;
+
+            // CONEXIÓN CON LA API DE WHATSAPP
+            const urlWhatsApp = `https://api.whatsapp.com/send?phone=${telefonoLimpio}&text=${encodeURIComponent(textoMensaje)}`;
+
+            // Actualizar Dashboard Financiero
+            actualizarIndicadoresDashboard(totalActualCarrito);
+
+            // REINICIAR CAMPOS DEL FORMULARIO Y VISTAS
+            carrito = [];
+            document.getElementById("nombre-cliente").value = "";
+            document.getElementById("telefono-whatsapp").value = "";
+            document.getElementById("efectivo-recibido").value = "";
+            
+            // Limpieza del subformulario de tarjeta
+            document.getElementById("tarjeta-titular").value = "";
+            document.getElementById("tarjeta-numero").value = "";
+            document.getElementById("tarjeta-vencimiento").value = "";
+            document.getElementById("tarjeta-cvv").value = "";
+            document.getElementById("tarjeta-correo").value = "";
+
+            actualizarVistasTodo();
+            renderizarHistorialAuditoria();
+
+            // Ejecución segura de la API
+            window.open(urlWhatsApp, '_blank');
+        }
+
+        function actualizarIndicadoresDashboard(montoNuevo) {
+            const contVentas = document.getElementById("ventas-historicas-contador");
+            const totalCaja = document.getElementById("ingresos-totales");
+
+            let nuevasVentas = parseInt(contVentas.innerText) + 1;
+            let nuevaCaja = parseFloat(totalCaja.innerText.replace('$', '')) + montoNuevo;
+
+            contVentas.innerText = nuevasVentas;
+            totalCaja.innerText = `$${nuevaCaja.toFixed(2)}`;
+        }
+
+        function renderizarHistorialAuditoria() {
+            const cuerpoLog = document.getElementById("log-ventas");
+            cuerpoLog.innerHTML = "";
+
+            historialVentas.forEach(v => {
+                cuerpoLog.innerHTML += `
+                    <tr class="hover:bg-stone-50 transition text-xs">
+                        <td class="px-4 py-2.5 font-medium text-stone-700">
+                            <span class="text-[10px] text-amber-800 block font-bold">#${v.id}</span>
+                            ${v.cliente}
+                        </td>
+                        <td class="px-4 py-2.5 text-center text-stone-600 font-medium">${v.metodo}</td>
+                        <td class="px-4 py-2.5 text-right font-bold text-stone-800">$${v.monto.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+        }
+    </script>
+</body>
+</html>
