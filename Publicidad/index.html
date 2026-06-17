@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papantla Digital - Innovación Comercial Interactiva</title>
+    <style>
+        /* CONFIGURACIÓN DE COLORES ANALÓGICOS DOMINANTES (CÁLIDOS) */
+        :root {
+            --amarillo-sol: #F4B41A;    /* Dominante 1: Energía, calidez y vainilla */
+            --verde-selva: #143D1F;     /* Dominante 2: Identidad totonaca y follaje */
+            --verde-lima: #79A43B;      /* Transición analógica suave */
+            --azul-calido: #0E2431;     /* Contraste oscuro para textos y elegancia */
+            --blanco-crema: #FFFDF6;    /* Fondo cálido inspirado en el color de la vainilla seca */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', 'Segoe UI', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--blanco-crema);
+            color: var(--azul-calido);
+            overflow-x: hidden;
+        }
+
+        /* HERO BANNER DINÁMICO */
+        header {
+            background: linear-gradient(135deg, var(--verde-selva) 0%, var(--verde-lima) 50%, var(--amarillo-sol) 100%);
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+            position: relative;
+            clip-path: ellipse(120% 100% at 50% 0%);
+            box-shadow: 0 10px 30px rgba(20, 61, 31, 0.3);
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-shadow: 3px 3px 0px var(--azul-calido);
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+            animation: deArriba 1s ease-out;
+        }
+
+        header h1 span {
+            color: var(--amarillo-sol);
+            text-shadow: 3px 3px 0px white;
+        }
+
+        header p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 30px auto;
+            font-weight: 300;
+            text-shadow: 1px 1px 10px rgba(0,0,0,0.5);
+            animation: deAbajo 1s ease-out 0.3s backwards;
+        }
+
+        /* CONTENEDOR */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* SECCIÓN ESTADÍSTICAS INTERACTIVAS (CONTADORES) */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: -60px auto 60px auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            border-bottom: 8px solid var(--amarillo-sol);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(121, 164, 59, 0.2);
+            border-bottom-color: var(--verde-lima);
+        }
+
+        .counter {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--verde-selva);
+            display: inline-block;
+        }
+
+        .stat-card p {
+            margin-top: 15px;
+            font-weight: 500;
+            font-size: 1.05rem;
+            color: var(--azul-calido);
+        }
+
+        /* SECCIONES TÍTULOS */
+        h2.section-title {
+            font-size: 2.2rem;
+            color: var(--verde-selva);
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        h2.section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 5px;
+            background: var(--amarillo-sol);
+            margin: 10px auto 0 auto;
+            border-radius: 3px;
+        }
+
+        /* SIMULADOR INTERACTIVO DE PRODUCTOS */
+        .interactive-simulator {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            margin-bottom: 60px;
+            border: 2px solid rgba(244, 180, 26, 0.2);
+        }
+
+        .tabs-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 25px;
+            border: none;
+            background-color: #f0f0f0;
+            color: var(--azul-calido);
+            font-weight: 700;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background-color: var(--amarillo-sol);
+            color: white;
+            box-shadow: 0 5px 15px rgba(244, 180, 26, 0.4);
+            transform: scale(1.05);
+        }
+
+        .preview-box {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            min-height: 250px;
+        }
+
+        .preview-img {
+            flex: 1;
+            min-width: 280px;
+            height: 220px;
+            background-color: #eaeaea;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #aaa;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border: 3px solid var(--verde-lima);
+        }
+
+        .preview-text {
+            flex: 1.5;
+            min-width: 280px;
+        }
+
+        .preview-text h3 {
+            font-size: 1.8rem;
+            color: var(--verde-selva);
+            margin-bottom: 15px;
+        }
+
+        /* REJILLA DE TARJETAS DINÁMICAS */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: linear-gradient(145deg, #ffffff, #fffdf9);
+            padding: 35px;
+            border-radius: 15px;
+            border-left: 6px solid var(--verde-lima);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: scale(1.03);
+            border-left-color: var(--amarillo-sol);
+        }
+
+        .feature-card .icon-wrapper {
+            width: 55px;
+            height: 55px;
+            background-color: rgba(244, 180, 26, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--verde-selva);
+        }
+
+        /* ANIMACIONES CSS */
+        @keyframes deArriba {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes deAbajo {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* FOOTER ESTILIZADO */
+        footer {
+            background-color: var(--azul-calido);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 80px;
+            border-top: 6px solid var(--amarillo-sol);
+        }
+
+        footer span {
+            color: var(--amarillo-sol);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HERO BANNER -->
+    <header>
+        <h1>PAPANTLA <span>DIGITAL</span></h1>
+        <p>Rompiendo paradigmas analógicos mediante el diseño de software interactivo con raíces totonacas tradicionales.</p>
+    </header>
+
+    <div class="container">
+
+        <!-- CONTADORES DINÁMICOS INTERACTIVOS (DIAGNÓSTICO) -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="counter" data-target="40">0</div><span class="counter">%</span>
+                <p>De los comercios opera de forma manual mediante bitácoras y cuadernos.</p>
+            </div>
+            <div class="stat-card">
+                <div class="counter" data-target="52">0</div><span class="counter">%</span>
+                <p>Exige soporte técnico e instrucciones en sitio de forma presencial.</p>
+            </div>
+            <div class="stat-card">
+                <div class="counter" data-target="100" style="display:none;">0</div>
+                <div class="counter" style="color: var(--amarillo-sol);">0</div><span class="counter">%</span>
+                <p>De los artesanos tradicionales realiza actualmente envíos nacionales constantes.</p>
+            </div>
+        </div>
+
+        <!-- SIMULADOR INTERACTIVO (PRODUCTO) -->
+        <h2 class="section-title">Explora la Modernización del Servicio</h2>
+        <div class="interactive-simulator">
+            <div class="tabs-container">
+                <button class="tab-btn active" onclick="cambiarFoco('vainilla', this)">Xanat (Vainilla)</button>
+                <button class="tab-btn" onclick="cambiarFoco('artesanos', this)">Alfarería y Madera</button>
+                <button class="tab-btn" onclick="cambiarFoco('gastronomia', this)">Negocios del Mercado</button>
+            </div>
+
+            <div class="preview-box" id="contenido-simulador">
+                <!-- Se inyecta dinámicamente vía JavaScript -->
+                <div class="preview-img" style="background-image: url('https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&w=500&q=80')"></div>
+                <div class="preview-text">
+                    <h3>Sabor y Tradición en Línea</h3>
+                    <p>Habilitamos menús digitales interactivos y catálogos enlazados a WhatsApp para que los productores de Vainilla de Papantla automaticen sus pedidos y cobros con tarjeta bancaria sin complicaciones técnicas.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- REJILLA DE PROPUESTA DE VALOR -->
+        <h2 class="section-title">Pilares de Nuestra Infraestructura</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="icon-wrapper">📱</div>
+                <h3>Ecosistema WhatsApp</h3>
+                <p>Aprovechamos las herramientas de comunicación móvil que el 36% de los comerciantes ya sabe usar, profesionalizando el cierre de sus ventas.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-wrapper">💳</div>
+                <h3>Pasarelas de Cobro 24/7</h3>
+                <p>Estrategia tecnológica enfocada en mitigar la pérdida de clientes integrando transacciones con tarjeta de crédito y débito integradas en el sitio web.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-wrapper">🌿</div>
+                <h3>Sustentabilidad Totonaca</h3>
+                <p>Alineación estructural con los ODS 8 y 9 mediante la erradicación del papel de oficina y la apertura de cadenas de logística a nivel nacional.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- PIE DE PÁGINA -->
+    <footer>
+        <p>© 2026 Bluepixel Technology. Proyecto de Innovación Tecnológica.</p>
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 10px;">Orgullosamente diseñado para la modernización de <span>Papantla de Olarte, Veracruz</span>.</p>
+    </footer>
+
+    <!-- INTERACTIVIDAD Y CONTROL LOGICO -->
+    <script>
+        // 1. ANIMACIÓN AUTOMÁTICA DE LOS CONTADORES NUMÉRICOS
+        const counters = document.querySelectorAll('.counter');
+        counters.forEach(counter => {
+            const target = +counter.getAttribute('data-target');
+            if(!target) return;
+            
+            const speed = 30; // Velocidad de la animación
+            const updateCount = () => {
+                const initial = +counter.innerText;
+                const increment = target / speed;
+
+                if (initial < target) {
+                    counter.innerText = Math.ceil(initial + increment);
+                    setTimeout(updateCount, 40);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+            updateCount();
+        });
+
+        // 2. DATA DEL SIMULADOR DINÁMICO
+        const datosProductos = {
+            vainilla: {
+                titulo: "Sabor y Tradición en Línea",
+                desc: "Habilitamos menús digitales interactivos y catálogos enlazados a WhatsApp para que los productores de Vainilla de Papantla automaticen sus pedidos y cobros con tarjeta bancaria sin complicaciones técnicas.",
+                img: "https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&w=500&q=80"
+            },
+            artesanos: {
+                titulo: "Del Taller de Barro al Mercado Nacional",
+                desc: "Los artesanos de madera y figuras de barro totonacas expanden su mercado. El software les dota de un control de inventarios físico simplificado que elimina las bitácoras manuales y calcula costos de envío de paquetería automáticamente.",
+                img: "https://images.unsplash.com/photo-1565192647048-f997ee879457?auto=format&fit=crop&w=500&q=80"
+            },
+            gastronomia: {
+                titulo: "Eficiencia para los Locatarios del Mercado Hidalgo",
+                desc: "Control absoluto del stock y las comandas diarias. Diseñado de forma intuitiva para microempresas de comida, logrando que el salto tecnológico desde el cuaderno tradicional sea cómodo, seguro y respaldado por nuestro soporte en sitio.",
+                img: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=500&q=80"
+            }
+        };
+
+        function cambiarFoco(llave, elemento) {
+            // Remover estado activo de botones
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            elemento.classList.add('active');
+
+            // Actualizar caja de contenido con animación suave
+            const box = document.getElementById('contenido-simulador');
+            box.style.opacity = '0';
+            
+            setTimeout(() => {
+                box.innerHTML = `
+                    <div class="preview-img" style="background-image: url('${datosProductos[llave].img}')"></div>
+                    <div class="preview-text">
+                        <h3>${datosProductos[llave].titulo}</h3>
+                        <p>${datosProductos[llave].desc}</p>
+                    </div>
+                `;
+                box.style.opacity = '1';
+                box.style.transition = 'opacity 0.4s ease';
+            }, 200);
+        }
+    </script>
+</body>
+</html>
